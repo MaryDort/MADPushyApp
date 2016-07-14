@@ -29,6 +29,12 @@
     [self configureControllerWithMessage:notification.alertBody title:@"Receive while running" application:application];
 }
 
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(nullable NSString *)identifier forLocalNotification:(UILocalNotification *)notification withResponseInfo:(NSDictionary *)responseInfo completionHandler:(void(^)())completionHandler {
+    [self configureControllerWithMessage:identifier title:@"Received on action" application:application];
+    
+    completionHandler();
+}
+
 - (void)configureControllerWithMessage:(NSString *)message title:(NSString *)title application:(UIApplication *)application {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
                                                                              message:message

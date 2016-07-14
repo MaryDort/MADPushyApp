@@ -19,8 +19,30 @@
 }
 
 - (void)requestPermissionToNotify {
+    UIMutableUserNotificationAction *missAction = [[UIMutableUserNotificationAction alloc] init];
+    
+    missAction.identifier = @"MISS_ACTION";
+    missAction.title = @"Miss";
+    missAction.activationMode = UIUserNotificationActivationModeBackground;
+    missAction.authenticationRequired = NO;
+    missAction.destructive = YES;
+    
+    UIMutableUserNotificationAction *handleAction = [[UIMutableUserNotificationAction alloc] init];
+    
+    handleAction.identifier = @"HANDLE_ACTION";
+    handleAction.title = @"Handle";
+    handleAction.activationMode = UIUserNotificationActivationModeForeground;
+    handleAction.authenticationRequired = NO;
+    handleAction.destructive = NO;
+
+    UIMutableUserNotificationCategory *category = [[UIMutableUserNotificationCategory alloc] init];
+    
+    category.identifier = @"MAIN_CATEGORY";
+    [category setActions:@[missAction, handleAction] forContext:UIUserNotificationActionContextDefault];
+    
+    NSSet *categoriesSet = [NSSet setWithObjects:category, nil];
     UIUserNotificationType userNotificationTypes = UIUserNotificationTypeBadge | UIUserNotificationTypeSound |UIUserNotificationTypeAlert;
-    UIUserNotificationSettings *userNotificationSettings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes categories:nil];
+    UIUserNotificationSettings *userNotificationSettings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes categories:categoriesSet];
     
     [[UIApplication sharedApplication] registerUserNotificationSettings:userNotificationSettings];
 }
@@ -36,6 +58,7 @@
     localNotification.alertAction = @"Okey";
     localNotification.soundName = UILocalNotificationDefaultSoundName;
     localNotification.applicationIconBadgeNumber = 100;
+    localNotification.category = @"MAIN_CATEGORY";
     
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
 }
